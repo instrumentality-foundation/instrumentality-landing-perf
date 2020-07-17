@@ -1,0 +1,8 @@
+@brand-color: #a41f76;
+@brand-color-light-siste: #FF9650;
+@dark-color: #262229;
+@light-color: #ffffff;
+
+.font-fluid(@min-font, @max-font, @min-screen, @max-screen) {
+    font-size: calc(unit(@min-font, em) + (@max-font - @min-font) * ((100vw - unit(@min-screen, px)) / (@max-screen - @min-screen)));
+}
