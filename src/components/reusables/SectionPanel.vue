@@ -1,22 +1,22 @@
+<!-- Like a Feature Panel without a button -->
 <template>
-    <div class="feature-panel-comp">
-        <section class="uk-section uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-text-center">
+    <div class="section-panel-comp">
+        <section class="uk-section uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-text-center uk-card uk-card-default">
             <img :src="panelImage" :alt="panelImageDescription">
             <h2>{{ panelTitle }}</h2>
-            <button class="uk-button" type="button">{{ panelButton }}</button>
-            <slot name="feature-content"></slot>
+            <p>{{ panelIntro }}</p>
         </section>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'FeaturePanel',
+    name: 'SectionPanel',
     props: {
         panelImage: String,
         panelImageDescription: String,
         panelTitle: String,
-        panelButton: String
+        panelIntro: String
     }
 }
 </script>
@@ -42,6 +42,12 @@ export default {
         font-family: 'Roboto', sans-serif;
         font-weight: 700;
         .font-fluid(1, 50, 320, 3840);
+    }
+
+    p {
+        color: @dark-color;
+        font-family: 'Roboto', sans-serif;
+        .font-fluid(1, 75, 320, 3840)
     }
 
 </style>

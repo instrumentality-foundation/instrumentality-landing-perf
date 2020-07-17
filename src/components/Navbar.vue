@@ -139,11 +139,11 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
 }
 
 /** Freezing effect when link becomes active */
-.uk-navbar-nav li a.active {
+.uk-navbar-nav li a.active, .uk-offcanvas-bar .uk-nav li a.active {
   color: @brand-color;
 }
 
-.uk-navbar-nav li a.active::before {
+.uk-navbar-nav li a.active::before, .uk-offcanvas-bar .uk-nav li a.active::before {
   content: "";
   position: absolute;
   visibility: visible;
