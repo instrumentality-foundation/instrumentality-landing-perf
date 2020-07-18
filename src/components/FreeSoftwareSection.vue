@@ -35,7 +35,10 @@ export default {
 <style lang="less" scoped>
 
 .uk-section {
-    padding: .5em;
+
+    div {
+        padding: 1em;
+    }
 
     img {
         max-height: 35vh;
@@ -61,6 +64,7 @@ export default {
         font-weight: 700;
         .font-fluid(1,20,320,3840);
         background-color: #C0004F;
+        text-decoration: none;
     }
 
 }

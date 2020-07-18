@@ -57,7 +57,7 @@ export default {
                 image: require("@/assets/Illustrations/planet.svg"),
                 imageDescription: "Palnet",
                 title: "Discover Free Software",
-                intro: "Why we steer away from porprietary models"
+                intro: "We steer away from porprietary models"
             }
         }
     }
