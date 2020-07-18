@@ -3,7 +3,7 @@
         <section class="uk-section uk-flex uk-flex-column uk-flex-middle uk-flex-center uk-text-center">
             <img :src="panelImage" :alt="panelImageDescription">
             <h2>{{ panelTitle }}</h2>
-            <button class="uk-button" type="button">{{ panelButton }}</button>
+            <button class="uk-button" type="button"><router-link :to="panelLink">{{ panelButton }}</router-link></button>
             <slot name="feature-content"></slot>
         </section>
     </div>
@@ -16,7 +16,8 @@ export default {
         panelImage: String,
         panelImageDescription: String,
         panelTitle: String,
-        panelButton: String
+        panelButton: String,
+        panelLink: String
     }
 }
 </script>
@@ -42,6 +43,11 @@ export default {
         font-family: 'Roboto', sans-serif;
         font-weight: 700;
         .font-fluid(1, 50, 320, 3840);
+    }
+
+    a {
+        text-decoration: none;
+        color: @light-color;
     }
 
 </style>

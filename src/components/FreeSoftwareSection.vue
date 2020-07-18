@@ -17,7 +17,7 @@
                 <h3>Security in the open</h3>
                 <p>
                     As we've seen with multiple big products, security in the darkness does not work for anyone.
-                    That's we all of our code is out in the open. The strength of our security lays in the code
+                    That's why all our code is out in the open. The strength of our security lays in the code itself
                     not in your inability to see the it.
                 </p>
                 <a href="">Take a peek</a>
