@@ -25,8 +25,8 @@
                 <!-- Right side of navbar: on larger devices -->
                 <div class="uk-navbar-right uk-visible@m">
                     <ul class="uk-navbar-nav">
-                        <li><a href="">Login</a></li>
-                        <li><a href="">Signup</a></li>
+                        <li><a href="#login-modal" uk-toggle>Login</a></li>
+                        <li><a href="#signup-modal" uk-toggle>Signup</a></li>
                     </ul>
                 </div>
 
@@ -50,18 +50,107 @@
 
                     <hr class="uk-divider" />
 
-                    <li><a href="">Login</a></li>
-                    <li><a href="">Signup</a></li>
+                    <li><a href="#login-modal" uk-toggle>Login</a></li>
+                    <li><a href="#signup-modal" uk-toggle>Signup</a></li>
                 </ul>
             </div>
         </div>
+
+        <!-- Defining the authentication modals -->
+        <div id="login-modal" uk-modal>
+            <div class="uk-modal-dialog">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+                
+                <!-- Modal header -->
+                <div class="uk-modal-header">
+                    <h3 class="uk-modal-title uk-text-center">Welcome back!</h3>
+                </div>
+
+                <!-- Modal body -->
+                <div class="uk-modal-body uk-flex uk-flex-column uk-flex-center">
+                    <img src="@/assets/Illustrations/vault.svg" alt="A safebox" class="uk-margin-medium-bottom">
+                    <form action="" class="uk-flex uk-flex-center">
+                        <input id="login-private-key-inp" type="password" class="uk-input uk-text-center" placeholder="Enter Your Private Key">
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="uk-modal-footer uk-flex uk-flex-center uk-flex-column uk-flex-middle">
+                    <button id="login-button" class="uk-button uk-text-center uk-margin-bottom">Log In</button>
+                    <a href="#signup-modal" uk-toggle>I don't have an ID yet</a>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="signup-modal" uk-modal>
+            <div class="uk-modal-dialog">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+                
+                <!-- Modal header -->
+                <div class="uk-modal-header">
+                    <h3 class="uk-modal-title uk-text-center">Get your developer identity</h3>
+                </div>
+
+                <!-- Modal body -->
+                <div class="uk-modal-body uk-flex uk-flex-column uk-flex-center">
+                    <img src="@/assets/Illustrations/id.svg" alt="An ID card" class="uk-margin-medium-bottom">
+                    <form action="" class="uk-flex uk-flex-center">
+                        <input id="signup-user-inp" type="text" class="uk-input uk-text-center" placeholder="Choose a clever username">
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="uk-modal-footer uk-flex uk-flex-center uk-flex-column uk-flex-middle">
+                    <button id="signup-button" class="uk-button uk-text-center uk-margin-bottom">Sign Up</button>
+                    <a href="#login-modal" uk-toggle>I already have an ID</a>
+                </div>
+
+            </div>
+        </div>
+        
 
     </div>
 </template>
 
 <script>
+
+var pattern = /[a-z_0-9]{1,32}/;
+const axios = require('axios').default;
+
+/** The getIrohaAccount function calls the Iroha Ledger to create an account */
+function getIrohaAccount (username) {
+    if (pattern.test(username) == true) {
+        axios
+            .get(`http://127.0.0.1:5000/account/create/${username}/Instrumentality`)
+            .then ((response) => {
+                console.log(response.data.msg);
+            })
+            .catch((error) => {
+                console.log("This went wrong: " + error.response.data.msg);
+            });
+    }
+    else {
+        console.log("Can't send request")
+    }
+}
+
+/** The getInput function can get the text value from input elements*/
+function getInput(elementId) {
+    var element = document.getElementById(elementId);
+    return element.value;
+}
+
 export default {
-    name: 'Navbar'    
+    name: 'Navbar',
+    mounted() {
+        /** Adding two click listeners for the authentication buttons */
+        document
+            .getElementById('signup-button')
+            .addEventListener("click", function() {
+                getIrohaAccount(getInput('signup-user-inp'));
+            });
+    }
 }
 </script>
 
@@ -114,8 +203,8 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
 
 .uk-offcanvas-bar hr{
     border: 1px solid;
-    color: @brand-color-light-siste;
-    border-top-color: @brand-color-light-siste;
+    color: @brand-color-light-sister;
+    border-top-color: @brand-color-light-sister;
 }
 
 /** Cool effect on link hovering */
@@ -158,6 +247,66 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
 /** Fixing focused links */
 .uk-navbar-nav li a.active:focus, .uk-offcanvas-bar .uk-nav li a.active:focus {
     color: @brand-color;
+}
+
+/** Styles for the authentication modals */
+.uk-modal-body {
+    padding-left: 0;
+    padding-right: 0;
+
+    input {
+        width: 80%;
+        font-family: 'Roboto', sans-serif;
+        border-color: @brand-color;
+        border-radius: .3em;
+        color: @brand-color;
+        .font-fluid(1, 20, 320, 3840);
+
+    }
+
+    input::placeholder {
+        color: rgba(71, 20, 36, 0.8);
+    }
+
+    img {
+        max-height: 25vh;
+    }
+}
+
+.uk-modal-footer {
+    padding: 1em;
+
+    a {
+        font-family: 'Roboto', sans-serif;
+        .font-fluid(1, 15, 320, 3840);
+        color: @link-color;
+        text-decoration: none;
+        padding: 1em;
+        border-radius: .3em;
+    }
+
+    a:hover {
+        background-color: @link-color;
+        color: @light-color;
+        transition: all 0.3s ease-in-out;
+    }
+}
+
+.uk-modal-footer button.uk-button {
+    width: 50%;
+    padding: .5em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    .font-fluid(1, 30, 320, 3840);
+    color: @light-color;
+    background-color: #62BAAC;
+    border-radius: .3em;
+}
+
+#signup-modal .uk-modal-footer {
+    button.uk-button {
+        background-color: @brand-color-light-sister;
+    }
 }
 
 </style>
