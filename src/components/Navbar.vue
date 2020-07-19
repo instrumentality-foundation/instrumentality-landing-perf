@@ -103,6 +103,7 @@
                 <!-- Modal footer -->
                 <div class="uk-modal-footer uk-flex uk-flex-center uk-flex-column uk-flex-middle">
                     <button id="signup-button" class="uk-button uk-text-center uk-margin-bottom">Sign Up</button>
+                    <div id="signup-spinner" uk-spinner="ratio: 2"></div>
                     <a href="#login-modal" uk-toggle>I already have an ID</a>
                 </div>
 
@@ -114,32 +115,11 @@
 </template>
 
 <script>
+import { AccountManager } from '@/utils/AccountManager';
+import { SpinnerVisuals, ElementManipulator } from '@/utils/ElementManipulator';
 
-var pattern = /[a-z_0-9]{1,32}/;
-const axios = require('axios').default;
-
-/** The getIrohaAccount function calls the Iroha Ledger to create an account */
-function getIrohaAccount (username) {
-    if (pattern.test(username) == true) {
-        axios
-            .get(`http://127.0.0.1:5000/account/create/${username}/Instrumentality`)
-            .then ((response) => {
-                console.log(response.data.msg);
-            })
-            .catch((error) => {
-                console.log("This went wrong: " + error.response.data.msg);
-            });
-    }
-    else {
-        console.log("Can't send request")
-    }
-}
-
-/** The getInput function can get the text value from input elements*/
-function getInput(elementId) {
-    var element = document.getElementById(elementId);
-    return element.value;
-}
+var accountManager = new AccountManager;
+var manipulator = new ElementManipulator;
 
 export default {
     name: 'Navbar',
@@ -148,7 +128,15 @@ export default {
         document
             .getElementById('signup-button')
             .addEventListener("click", function() {
-                getIrohaAccount(getInput('signup-user-inp'));
+                let spinnerVisuals = new SpinnerVisuals('signup-button', 'signup-spinner')
+
+                // Activate spinner and send request
+                spinnerVisuals.toggle();
+
+                accountManager.createAccount(
+                    manipulator.getTextFromInput('signup-user-inp'),
+                    spinnerVisuals
+                )
             });
     }
 }
@@ -283,6 +271,7 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
         text-decoration: none;
         padding: 1em;
         border-radius: .3em;
+        transition: all 0.3s ease-in-out;
     }
 
     a:hover {
@@ -307,6 +296,19 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
     button.uk-button {
         background-color: @brand-color-light-sister;
     }
+
+    // The spinner
+    .uk-icon {
+        color: @brand-color-light-sister;
+        display: none;
+    }
+}
+
+/** Overflow wrap for keys modal */
+h3.ovf-wrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 </style>
