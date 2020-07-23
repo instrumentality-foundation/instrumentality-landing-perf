@@ -1,6 +1,6 @@
 import UIkit from "uikit";
 import { ElementManipulator, SpinnerVisuals } from "./ElementManipulator";
-import { iroha_network } from "./Constants";
+import { iroha_network, full_app } from "./Constants";
 
 var manipulator = new ElementManipulator;
 var executor = require('axios').default;
@@ -64,5 +64,41 @@ export class AccountManager {
             </div>
             `;
         manipulator.createModal(content);
+    }
+
+    authAccount(username, privateKey, spinnerVisuals = null) {
+        // If you pass another type of object than SpinnerVisuals I exit
+        if(spinnerVisuals instanceof SpinnerVisuals === false && spinnerVisuals != null) {
+            console.log("Bad options! Not going any further!");
+            return -1;
+        }
+
+        
+        spinnerVisuals.toggle();
+        executor({
+            method: 'post',
+            url: `${iroha_network}/account/auth`,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                username: username,
+                privateKey: privateKey
+            }
+        }).then((response) => {
+            console.log(response.data.msg);
+            spinnerVisuals.toggle();
+            manipulator.notify("Authenticated successfully", 'success');
+            // Redirect to full application
+            // For secure auth a token should be passed at redirection
+            executor.get(`${iroha_network}/redirect/fullapp`); // Performs auth on main app with pubkey
+            window.location = full_app + "/home";
+        }).catch((error) => {
+            let errMsg = error.response.data.msg;
+            console.error("This went wrong: " + errMsg);
+            spinnerVisuals.toggle();
+            manipulator.notify(errMsg, 'danger');
+        });
+        
     }
 }

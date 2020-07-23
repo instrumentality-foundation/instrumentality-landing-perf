@@ -69,7 +69,8 @@
                 <!-- Modal body -->
                 <div class="uk-modal-body uk-flex uk-flex-column uk-flex-center">
                     <img src="@/assets/Illustrations/vault.svg" alt="A safebox" class="uk-margin-medium-bottom">
-                    <form action="" class="uk-flex uk-flex-center">
+                    <form id="auth-redirect-method" action="http://localhost:5000" method="POST" class="uk-flex uk-flex-center uk-flex-column uk-flex-middle">
+                        <input type="text" name="login-username" id="login-user-inp" class="uk-input uk-text-center uk-margin-bottom" placeholder="Enter your username">
                         <input id="login-private-key-inp" type="password" class="uk-input uk-text-center" placeholder="Enter Your Private Key">
                     </form>
                 </div>
@@ -77,6 +78,7 @@
                 <!-- Modal footer -->
                 <div class="uk-modal-footer uk-flex uk-flex-center uk-flex-column uk-flex-middle">
                     <button id="login-button" class="uk-button uk-text-center uk-margin-bottom">Log In</button>
+                    <div id="login-spinner" uk-spinner="ratio: 2"></div>
                     <a href="#signup-modal" uk-toggle>I don't have an ID yet</a>
                 </div>
 
@@ -138,6 +140,19 @@ export default {
                     spinnerVisuals
                 )
             });
+
+        document
+        .getElementById('login-button')
+        .addEventListener("click", function() {
+            let spinnerVisuals = new SpinnerVisuals('login-button', 'login-spinner');
+
+            // Send request
+            accountManager.authAccount(
+                manipulator.getTextFromInput('login-user-inp'),
+                manipulator.getTextFromInput('login-private-key-inp'),
+                spinnerVisuals
+            );
+        });
     }
 }
 </script>
@@ -290,6 +305,13 @@ button.uk-offcanvas-close, button.uk-offcanvas-close:hover {
     color: @light-color;
     background-color: #62BAAC;
     border-radius: .3em;
+}
+
+.uk-modal-footer {
+    .uk-icon {
+        color: #62BAAC;
+        display: none;
+    }
 }
 
 #signup-modal .uk-modal-footer {
